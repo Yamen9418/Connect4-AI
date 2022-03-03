@@ -7,9 +7,9 @@ import { Component, OnInit } from '@angular/core';
 })
 
 export class GameComponent implements OnInit {
-  board!: any[]; 
-  blueIsNext!: boolean;
-  winner!: number;
+  board: number[][] | undefined; 
+  blueIsNext: boolean | undefined;
+  winner: number | undefined;
 
   constructor() { 
   }
@@ -19,7 +19,7 @@ export class GameComponent implements OnInit {
   }
 
   newGame() {
-    this.board = Array(7*6).fill(null);
+    this.board = Array(7).fill(Array(6).fill(0));
     this.winner = 0;
     this.blueIsNext = false;
   }

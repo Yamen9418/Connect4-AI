@@ -7,5 +7,5 @@ import { Component, Input } from '@angular/core';
 })
 export class CellComponent {
   @Input()
-  value!: 0 | 1 | -1;
+  value: number | undefined;
 }
