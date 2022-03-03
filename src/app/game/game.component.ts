@@ -5,11 +5,26 @@ import { Component, OnInit } from '@angular/core';
   templateUrl: './game.component.html',
   styleUrls: ['./game.component.css']
 })
+
 export class GameComponent implements OnInit {
+  board!: any[]; 
+  blueIsNext!: boolean;
+  winner!: number;
 
-  constructor() { }
-
-  ngOnInit(): void {
+  constructor() { 
   }
 
+  ngOnInit(): void {
+    this.newGame();
+  }
+
+  newGame() {
+    this.board = Array(7*6).fill(null);
+    this.winner = 0;
+    this.blueIsNext = false;
+  }
+
+  get player() {
+    return this.blueIsNext ? 1 : -1;
+  }
 }
