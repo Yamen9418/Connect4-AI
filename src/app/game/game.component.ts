@@ -7,9 +7,12 @@ import { Component, OnInit } from '@angular/core';
 })
 
 export class GameComponent implements OnInit {
-  board: number[][] | undefined; 
-  blueIsNext: boolean | undefined;
-  winner: number | undefined;
+  height = 6;
+  width = 7;
+
+  board!: number[];
+  playerIsNext!: boolean;
+  winner!: number | null;
 
   constructor() { 
   }
@@ -19,12 +22,33 @@ export class GameComponent implements OnInit {
   }
 
   newGame() {
-    this.board = Array(7).fill(Array(6).fill(0));
-    this.winner = 0;
-    this.blueIsNext = false;
+    this.board = Array(this.height * this.width).fill(0);
+    this.winner = null;
+    this.playerIsNext = true;
   }
 
   get player() {
-    return this.blueIsNext ? 1 : -1;
+    return this.playerIsNext ? 1 : -1;
+  }
+
+  makeMove(i:number) {
+    const x = i % this.width;
+
+    if (this.board[x] == 0) {
+      for (let y = 0; y < this.height; y++) {
+        const index = x + y * this.width;
+        const cell = this.board[index];
+
+        if (cell != 0) {
+          this.board.splice(index - this.width, 1, this.player);
+          break;
+        } else if (y == this.height - 1) {
+          this.board.splice(index, 1, this.player);
+          break;
+        }
+      }
+
+      this.playerIsNext = !this.playerIsNext;
+    }
   }
 }

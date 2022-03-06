@@ -1,10 +1,8 @@
 <p>game works!</p>
 <main>
-    <div 
-        *ngFor="let col of board; let x = index">
-        <app-cell
-            *ngFor="let cell of col; let y = index"
-            [value]="cell">
-        </app-cell>
-    </div>
+    <app-cell
+        *ngFor="let cell of board; let i = index"
+        [value]="cell"
+        (click)="makeMove(i)">
+    </app-cell>
 </main>
