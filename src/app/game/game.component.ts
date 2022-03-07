@@ -40,7 +40,7 @@ export class GameComponent implements OnInit {
       for (let y = 0; y < this.height; y++) {
         const index = x + y * this.width;
         const cell = this.board[index];
-
+        console.log('cell: ' + cell)
         if (cell) {
           this.board.splice(index - this.width, 1, this.player);
           this.board2d[x][y - 1] = this.player;
@@ -54,33 +54,74 @@ export class GameComponent implements OnInit {
 
       this.playerIsNext = !this.playerIsNext;
     }
-
-    this.calculateWinner();
+    this.winner = this.calculateWinner();
   }
 
   calculateWinner() {
-    for (let index = 0; index < this.board2d.length; index++) {
-      const element = this.board2d[index][0];
 
-      if (element == 0) {
-        break;
-      } else if (element != 0 && index == this.board2d.length - 1) {
-        this.winner = 0;
+    // check columns
+    for (let col = 0; col < this.board2d.length; col++) {
+      for (let row = 0; row < this.board2d[0].length - 3; row++) {
+        let sum = 0;
+        for (let i = row; i < row + 4; i++) {
+          sum += this.board2d[col][i];
+        }
+        if (sum == 4 || sum == -4) {
+          return sum / 4;
+        }
       }
     }
+
+    // check rows
+    let transposed = this.transpose(this.board2d)
+    for (let col = 0; col < transposed.length; col++) {
+      for (let row = 0; row < transposed[0].length - 3; row++) {
+        let sum = 0
+        for (let i = row; i < row + 4; i++) {
+          sum += transposed[col][i];
+        }
+        if (sum == 4 || sum == -4) {
+          return sum / 4;
+        }
+      }
+    }
+
+    // Test diagonal \
+    for (let row = 0; row < this.board2d.length - 3; row++) {
+      for (let col = 0; col < this.board2d[0].length - 3; col++) {
+        let sum = 0;
+        for (let k = 0; k < 4; k++) {
+          sum += this.board2d[col + k][row + k];
+          if (sum == 4 || sum == -4) {
+            return sum / 4;
+          }
+        }
+      }
+    }
+
+    // Test diagonal /
+    for (let row = 0; row < this.board2d.length - 3; row++) {
+      for (let col = 3; col < this.board2d[0].length; col++) {
+        let sum = 0;
+        for (let k = 0; k < 4; k++) {
+          sum += this.board2d[col - k][row + k];
+          if (sum == 4 || sum == -4) {
+            return sum / 4;
+          }
+        }
+      }
+    }
+    return null;
   }
 
   transpose(board: number[][]) {
-    let transposed = Array(board[0].length).fill(Array(board.length).fill(0));
-    
-    for(var i = 0; i < board.length; i++){
-        for(var j = 0; j < board[0].length; j++){
-            transposed[j][i] = board[i][j];
+    let transposed = Array(board[0].length).fill(null).map(()=>Array(board.length).fill(0))
+    for(var i = 0; i < board[0].length; i++){
+        for(var j = 0; j < board.length; j++){
+            transposed[i][j] = board[j][i];
         };
     };
+    return transposed;
   }
   
-  flip(board: number[][]) {
-    let flipped = Array(board.length).fill(Array(board[0].length).fill(0));
-  }
 }
