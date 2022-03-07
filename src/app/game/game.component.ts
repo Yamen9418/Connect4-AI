@@ -22,7 +22,7 @@ export class GameComponent implements OnInit {
   }
 
   newGame() {
-    this.board = Array(this.height * this.width).fill(0);
+    this.board = Array(this.height * this.width).fill(null);
     this.winner = null;
     this.playerIsNext = true;
   }
@@ -34,12 +34,12 @@ export class GameComponent implements OnInit {
   makeMove(i:number) {
     const x = i % this.width;
 
-    if (this.board[x] == 0) {
+    if (!this.board[x]) {
       for (let y = 0; y < this.height; y++) {
         const index = x + y * this.width;
         const cell = this.board[index];
 
-        if (cell != 0) {
+        if (cell) {
           this.board.splice(index - this.width, 1, this.player);
           break;
         } else if (y == this.height - 1) {
@@ -50,5 +50,11 @@ export class GameComponent implements OnInit {
 
       this.playerIsNext = !this.playerIsNext;
     }
+
+    this.calculateWinner();
+  }
+
+  calculateWinner() {
+
   }
 }
