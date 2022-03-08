@@ -32,6 +32,7 @@ export class GameComponent implements OnInit {
   }
 
   makeMove(i:number) {
+    if (!this.winner) {
     const x = i % this.width;
 
     if (!this.board[x]) {
@@ -52,6 +53,7 @@ export class GameComponent implements OnInit {
     let board2d = this.build2dtable(this.board);
     this.winner = this.calculateWinner(board2d);
     console.log(this.winner);
+  }
   }
 
   calculateWinner(board2d: number[][]) {
