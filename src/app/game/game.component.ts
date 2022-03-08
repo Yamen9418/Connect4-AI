@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ComponentFactoryResolver, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-game',
@@ -11,7 +11,6 @@ export class GameComponent implements OnInit {
   width = 7;
 
   board!: number[];
-  board2d!: number[][];
   playerIsNext!: boolean;
   winner!: number | null;
 
@@ -24,7 +23,6 @@ export class GameComponent implements OnInit {
 
   newGame() {
     this.board = Array(this.height * this.width).fill(null);
-    this.board2d = Array(this.width).fill(Array(this.height).fill(0));
     this.winner = null;
     this.playerIsNext = true;
   }
@@ -40,32 +38,28 @@ export class GameComponent implements OnInit {
       for (let y = 0; y < this.height; y++) {
         const index = x + y * this.width;
         const cell = this.board[index];
-        console.log('cell: ' + cell)
         if (cell) {
           this.board.splice(index - this.width, 1, this.player);
-          this.board2d[x][y - 1] = this.player;
           break;
         } else if (y == this.height - 1) {
           this.board.splice(index, 1, this.player);
-          this.board2d[x][y] = this.player;
           break;
         }
       }
 
       this.playerIsNext = !this.playerIsNext;
     }
-    this.winner = this.calculateWinner();
+    let board2d = this.build2dtable(this.board);
+    this.winner = this.calculateWinner(board2d);
+    console.log(this.winner);
   }
 
-  calculateWinner() {
+  calculateWinner(board2d: number[][]) {
 
     // check columns
-    for (let col = 0; col < this.board2d.length; col++) {
-      for (let row = 0; row < this.board2d[0].length - 3; row++) {
-        let sum = 0;
-        for (let i = row; i < row + 4; i++) {
-          sum += this.board2d[col][i];
-        }
+    for (let row = 0; row < board2d.length; row++) {
+      for (let col = 0; col < board2d[0].length - 3; col++) {
+        let sum = this.getRangeSum(board2d[row], col, col + 4);
         if (sum == 4 || sum == -4) {
           return sum / 4;
         }
@@ -73,13 +67,10 @@ export class GameComponent implements OnInit {
     }
 
     // check rows
-    let transposed = this.transpose(this.board2d)
-    for (let col = 0; col < transposed.length; col++) {
-      for (let row = 0; row < transposed[0].length - 3; row++) {
-        let sum = 0
-        for (let i = row; i < row + 4; i++) {
-          sum += transposed[col][i];
-        }
+    let transposed = this.transpose(board2d)
+    for (let row = 0; row < transposed.length; row++) {
+      for (let col = 0; col < transposed[0].length - 3; col++) {
+        let sum = this.getRangeSum(transposed[row], col, col + 4);
         if (sum == 4 || sum == -4) {
           return sum / 4;
         }
@@ -87,11 +78,11 @@ export class GameComponent implements OnInit {
     }
 
     // Test diagonal \
-    for (let row = 0; row < this.board2d.length - 3; row++) {
-      for (let col = 0; col < this.board2d[0].length - 3; col++) {
+    for (let row = 0; row < board2d.length - 3; row++) {
+      for (let col = 0; col < board2d[0].length - 3; col++) {
         let sum = 0;
         for (let k = 0; k < 4; k++) {
-          sum += this.board2d[col + k][row + k];
+          sum += board2d[row + k][col + k];
           if (sum == 4 || sum == -4) {
             return sum / 4;
           }
@@ -100,11 +91,11 @@ export class GameComponent implements OnInit {
     }
 
     // Test diagonal /
-    for (let row = 0; row < this.board2d.length - 3; row++) {
-      for (let col = 3; col < this.board2d[0].length; col++) {
+    for (let row = 0; row < board2d.length - 3; row++) {
+      for (let col = 3; col < board2d[0].length; col++) {
         let sum = 0;
         for (let k = 0; k < 4; k++) {
-          sum += this.board2d[col - k][row + k];
+          sum += board2d[row + k][col - k];
           if (sum == 4 || sum == -4) {
             return sum / 4;
           }
@@ -112,6 +103,17 @@ export class GameComponent implements OnInit {
       }
     }
     return null;
+  }
+
+  build2dtable(board: number[]) {
+    let board2d = Array(this.height).fill(null).map(()=>Array(this.width).fill(0))
+    for (let i = 0; i < this.height; i++) {
+      for (let j = 0; j < this.width; j++) {
+        let idx = j + i * this.width;
+        board2d[i][j] = board[idx];
+      }
+    }
+    return board2d;
   }
 
   transpose(board: number[][]) {
@@ -123,5 +125,11 @@ export class GameComponent implements OnInit {
     };
     return transposed;
   }
+
+  getRangeSum(arr: number[], from: number, to: number) {
+    return arr.slice(from, to).reduce((p, c) => {
+      return p + c;
+    }, 0);
+  } 
   
 }
