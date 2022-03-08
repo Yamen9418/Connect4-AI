@@ -1,4 +1,5 @@
-import { Component, ComponentFactoryResolver, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { StatEntry } from '../stats/stats.component';
 
 @Component({
   selector: 'app-game',
@@ -32,31 +33,42 @@ export class GameComponent implements OnInit {
   }
 
   makeMove(i:number) {
-    if (!this.winner) {
-    const x = i % this.width;
+    if (this.winner == null) {
+      const x = i % this.width;
 
-    if (!this.board[x]) {
-      for (let y = 0; y < this.height; y++) {
-        const index = x + y * this.width;
-        const cell = this.board[index];
-        if (cell) {
-          this.board.splice(index - this.width, 1, this.player);
-          break;
-        } else if (y == this.height - 1) {
-          this.board.splice(index, 1, this.player);
-          break;
+      if (!this.board[x]) {
+        for (let y = 0; y < this.height; y++) {
+          const index = x + y * this.width;
+          const cell = this.board[index];
+          if (cell) {
+            this.board.splice(index - this.width, 1, this.player);
+            break;
+          } else if (y == this.height - 1) {
+            this.board.splice(index, 1, this.player);
+            break;
+          }
         }
-      }
 
-      this.playerIsNext = !this.playerIsNext;
+        this.playerIsNext = !this.playerIsNext;
+      }
+      let board2d = this.build2dtable(this.board);
+      this.winner = this.calculateWinner(board2d);
+
+      if (this.winner != null) {
+        console.log(this.winner);
+        this.addEntry("player", this.winner);
+      }
     }
-    let board2d = this.build2dtable(this.board);
-    this.winner = this.calculateWinner(board2d);
-    console.log(this.winner);
-  }
   }
 
   calculateWinner(board2d: number[][]) {
+    for (let col = 0; col < board2d[0].length; col++) {
+      if (board2d[0][col] == 0) {
+        break;
+      } else if (col == board2d[0].length - 1) {
+        return 0;
+      }
+    }
 
     // check columns
     for (let row = 0; row < board2d.length; row++) {
@@ -107,12 +119,26 @@ export class GameComponent implements OnInit {
     return null;
   }
 
+  addEntry(type:"bot" | "player", winner:number) {
+    const data = localStorage.getItem('stats');
+    let entries: StatEntry[];
+
+    if (data) {
+      entries = JSON.parse(data);
+    } else {
+      entries = [];
+    }
+
+    entries.push(new StatEntry(type, winner));
+    localStorage.setItem('stats', JSON.stringify(entries));
+  }
+
   build2dtable(board: number[]) {
     let board2d = Array(this.height).fill(null).map(()=>Array(this.width).fill(0))
     for (let i = 0; i < this.height; i++) {
       for (let j = 0; j < this.width; j++) {
         let idx = j + i * this.width;
-        board2d[i][j] = board[idx];
+        if (board[idx]) board2d[i][j] = board[idx];
       }
     }
     return board2d;
@@ -133,5 +159,4 @@ export class GameComponent implements OnInit {
       return p + c;
     }, 0);
   } 
-  
 }
