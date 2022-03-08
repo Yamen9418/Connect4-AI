@@ -1,5 +1,6 @@
-<h2 *ngIf="winner">Player {{ winner }} won the game!</h2>
-<button *ngIf="winner" (click)="ngOnInit()">Restart game</button>
+<h2 *ngIf="winner">Player {{ winner == 1 ? 1 : 2 }} won the game!</h2>
+<h2 *ngIf="winner == 0">Draw!</h2>
+<button mat-raised-button color="accent" *ngIf="winner || winner == 0" (click)="ngOnInit()">Restart game</button>
 
 <main>
     <app-cell
