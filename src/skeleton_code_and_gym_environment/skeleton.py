@@ -1,3 +1,4 @@
+from fastapi import FastAPI
 import json
 import math
 import pprint
@@ -35,7 +36,6 @@ CPURPLE = '\33[45m'
 CBLUE = '\33[44m'
 
 ####################### API #####################
-from fastapi import FastAPI
 
 app = FastAPI()
 
@@ -49,43 +49,42 @@ app = FastAPI()
 #
 #     return text
 
+
 @app.get("/state")
 def api_state():
     return json.dumps(env.board.tolist())
 
+
 @app.get('/start')
 def api_start():
-  # env.reset()
-  pprint.pprint(env.board)
-  return json.dumps(env.board.tolist())
+    # env.reset()
+    pprint.pprint(env.board)
+    return json.dumps(env.board.tolist())
+
 
 @app.get('/move1/{col}')
 def move2_api(col: int):
-  board = make_move(state, col, 1)
-  if not is_end(board)[1]:
-    return json.dumps(board.tolist())
-  return "Is_done" + json.dumps(board.tolist())
+    board = make_move(state, col, 1)
+    if not is_end(board)[1]:
+        return json.dumps(board.tolist())
+    return "Is_done" + json.dumps(board.tolist())
 
 
 @app.get('/move2/{col}')
 def move2_api(col: int):
-  board = make_move(state, col, -1)
-  if not is_end(board)[1]:
-    return json.dumps(board.tolist())
-  return "Is_done" + json.dumps(board.tolist())
+    board = make_move(state, col, -1)
+    if not is_end(board)[1]:
+        return json.dumps(board.tolist())
+    return "Is_done" + json.dumps(board.tolist())
 
 
 @app.get('/botmove/{depth}')
 def bot_move(depth: int):
-  action = alpha_beta_pruning(state, depth)
-  return json.dumps(action)
-
-
-
+    action = alpha_beta_pruning(state, depth)
+    return json.dumps(action)
 
 
 ####################### API #####################
-
 
 
 def call_server(move):
@@ -320,7 +319,8 @@ def min_value(board, alpha, beta, depth):
     for move in range(7):
         if not is_filled(board, move):
             temp_board = make_move(board.copy(), move, -1)
-            temp_v, temp_move = max_value(temp_board.copy(), alpha, beta, depth - 1)
+            temp_v, temp_move = max_value(
+                temp_board.copy(), alpha, beta, depth - 1)
             if v > temp_v:
                 v = temp_v
                 best_move = move
@@ -335,7 +335,7 @@ def min_value(board, alpha, beta, depth):
 
 
 def is_filled(board, move):
-        return np.count_nonzero(board[:, move]) == 6
+    return np.count_nonzero(board[:, move]) == 6
 
 
 def make_move(board, move, turn):
@@ -406,7 +406,9 @@ def student_move(state, depth):
     return alpha_beta_pruning(state, depth)
 
 # @app.get("/state")
-def play_game(vs_server=False, api_server = False):
+
+
+def play_game(vs_server=False, api_server=False):
     """
    The reward for a game is as follows. You get a
    botaction = random.choice(list(avmoves)) reward from the
@@ -429,7 +431,8 @@ def play_game(vs_server=False, api_server = False):
     global state
     if vs_server:
         # Start a new game
-        res = call_server(-1)  # -1 signals the system to start a new game. any running game is counted as a loss
+        # -1 signals the system to start a new game. any running game is counted as a loss
+        res = call_server(-1)
         # This should tell you if you or the bot starts
         print(res.json()['msg'])
         botmove = res.json()['botmove']
@@ -524,10 +527,13 @@ def main():
     # Parse command line arguments
     parser = argparse.ArgumentParser()
     group = parser.add_mutually_exclusive_group()
-    group.add_argument("-l", "--local", help="Play locally", action="store_true")
-    group.add_argument("-o", "--online", help="Play online vs server", action="store_true")
+    group.add_argument("-l", "--local", help="Play locally",
+                       action="store_true")
+    group.add_argument(
+        "-o", "--online", help="Play online vs server", action="store_true")
     group.add_argument("-api", "--api", help="Fetch data", action="store_true")
-    parser.add_argument("-s", "--stats", help="Show your current online stats", action="store_true")
+    parser.add_argument(
+        "-s", "--stats", help="Show your current online stats", action="store_true")
     args = parser.parse_args()
 
     # Print usage info if no arguments are given
