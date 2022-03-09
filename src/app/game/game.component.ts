@@ -15,7 +15,8 @@ export class GameComponent implements OnInit {
   playerIsNext!: boolean;
   winner!: number | null;
 
-  constructor() { }
+  constructor() {
+  }
 
   ngOnInit(): void {
     this.newGame();
@@ -52,6 +53,7 @@ export class GameComponent implements OnInit {
       }
       let board2d = this.build2dtable(this.board);
       this.winner = this.calculateWinner(board2d);
+      this.send_board_to_api(board2d)
 
       if (this.winner != null) {
         console.log(this.winner);
@@ -143,6 +145,12 @@ export class GameComponent implements OnInit {
     return board2d;
   }
 
+  send_board_to_api(board: number[][]) { //TODO David
+    return board
+  }
+
+
+
   transpose(board: number[][]) {
     let transposed = Array(board[0].length).fill(null).map(()=>Array(board.length).fill(0))
     for(var i = 0; i < board[0].length; i++){
@@ -157,5 +165,5 @@ export class GameComponent implements OnInit {
     return arr.slice(from, to).reduce((p, c) => {
       return p + c;
     }, 0);
-  } 
+  }
 }

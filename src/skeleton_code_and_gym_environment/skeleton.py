@@ -22,7 +22,7 @@ board_state = np.zeros((6, 7), dtype=int)
 
 # SERVER_ADRESS = "http://localhost:8000/"
 SERVER_ADRESS = "https://vilde.cs.lth.se/edap01-4inarow/"
-# SERVER_ADRESS = "http://127.0.0.1:8000/api-test"
+
 API_KEY = 'nyckel'
 STIL_ID = ["mo4718al-s"]  # TODO: fill this list with your stil-id's
 
@@ -60,6 +60,7 @@ app.add_middleware(
 )
 
 
+
 @app.get("/state")
 def api_state():
     return json.dumps(env.board.tolist())
@@ -92,6 +93,7 @@ def move2_api(col: int):
 def bot_move(depth: int):
     action = alpha_beta_pruning(state, depth)
     return json.dumps(action)
+
 
 
 ####################### API #####################
