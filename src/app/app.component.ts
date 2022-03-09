@@ -25,6 +25,7 @@ export class AppComponent implements OnInit {
       (response: String) => {
         //console.log(typeof response);
         this.board = response;
+        console.log(this.board)
         return response;
 
       }
