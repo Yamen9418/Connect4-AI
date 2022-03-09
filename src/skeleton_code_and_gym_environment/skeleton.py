@@ -36,6 +36,7 @@ CBLUE = '\33[44m'
 
 ####################### API #####################
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
@@ -48,6 +49,15 @@ app = FastAPI()
 #         text = 'Hello ' + name + '!'
 #
 #     return text
+origins = ["*"]
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 
 @app.get("/state")
 def api_state():
