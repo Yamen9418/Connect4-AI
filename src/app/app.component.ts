@@ -10,29 +10,36 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
+  board: String = '';
 
   constructor(
     private httpClient: HttpClient
   ) { }
   ngOnInit(): void {
     this.getState();
+    this.getMove1(3);
+
   }
   getState() {
     this.httpClient.get<any>('http://localhost:8000/state').subscribe(
-      response => {
-        console.log(response);
-        //this.friends = response;
+      (response: String) => {
+        //console.log(typeof response);
+        this.board = response;
+        return response;
+
       }
     );
   }
 
-  // getMove1(col) {
-  //   this.httpClient.get<any>('http://localhost:8000/move1/{col}').subscribe(
-  //     response => {
-  //       console.log(response);
-  //       //this.friends = response;
-  //     }
-  //   );
-  // }
+  getMove1(col: number) {
+    this.httpClient.get<any>('http://localhost:8000/move1/' + col).subscribe(
+      response => {
+        this.board = response.split("Is_done").pop();
+        return response; //gör split här också
+
+
+      }
+    );
+  }
   title = 'EDAF90-Project';
 }
