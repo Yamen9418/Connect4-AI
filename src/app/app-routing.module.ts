@@ -7,7 +7,8 @@ import { StatsComponent } from './stats/stats.component';
 const routes: Routes = [
   { path: '', component: MainComponent },
   { path: 'game', component: GameComponent },
-  { path: 'stats', component: StatsComponent }
+  { path: 'stats', component: StatsComponent },
+  // {path: 'board', component: GameComponent}
 ];
 
 @NgModule({

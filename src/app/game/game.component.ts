@@ -1,5 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { StatEntry } from '../stats/stats.component';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-game',
@@ -14,9 +15,11 @@ export class GameComponent implements OnInit {
   board!: number[];
   playerIsNext!: boolean;
   winner!: number | null;
+  botmove!: number | undefined;
 
-  constructor() {
-  }
+  constructor(
+    private httpClient: HttpClient
+  ) {}
 
   ngOnInit(): void {
     this.newGame();
@@ -53,7 +56,8 @@ export class GameComponent implements OnInit {
       }
       let board2d = this.build2dtable(this.board);
       this.winner = this.calculateWinner(board2d);
-      this.send_board_to_api(board2d)
+      // this.send_board_to_api(board2d)
+      this.postBoard(board2d)
 
       if (this.winner != null) {
         console.log(this.winner);
@@ -145,10 +149,22 @@ export class GameComponent implements OnInit {
     return board2d;
   }
 
-  send_board_to_api(board: number[][]) { //TODO David
-    return board
-  }
+  // send_board_to_api(board: number[][]) { //TODO David
+  //   return board
+  // }
 
+   postBoard(board2d: number [][]) {
+    this.httpClient.post<any>('http://localhost:8000/board/', {board: board2d}).subscribe({
+        next: data => {
+            this.botmove = data
+            console.log(this.botmove)
+            return data
+        },
+        error: error => {
+            console.error('There was an error!', error);
+        }
+    })
+  }
 
 
   transpose(board: number[][]) {
