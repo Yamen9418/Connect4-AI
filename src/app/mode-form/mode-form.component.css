@@ -1,0 +1,9 @@
+@import url('https://unpkg.com/bootstrap@3.3.7/dist/css/bootstrap.min.css');
+select {
+    display: grid;
+    width: 500px;
+}
+
+button {
+    width: 500px;
+}

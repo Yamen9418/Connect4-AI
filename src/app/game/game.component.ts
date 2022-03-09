@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { StatEntry } from '../stats/stats.component';
 
 @Component({
@@ -15,8 +15,7 @@ export class GameComponent implements OnInit {
   playerIsNext!: boolean;
   winner!: number | null;
 
-  constructor() { 
-  }
+  constructor() { }
 
   ngOnInit(): void {
     this.newGame();

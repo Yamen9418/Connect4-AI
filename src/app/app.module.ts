@@ -5,6 +5,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatCardModule } from '@angular/material/card';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -13,6 +14,7 @@ import { GameComponent } from './game/game.component';
 import { CellComponent } from './cell/cell.component';
 import { MainComponent } from './main/main.component';
 import { StatsComponent } from './stats/stats.component';
+import { ModeFormComponent } from './mode-form/mode-form.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +22,8 @@ import { StatsComponent } from './stats/stats.component';
     GameComponent,
     CellComponent,
     MainComponent,
-    StatsComponent
+    StatsComponent,
+    ModeFormComponent
   ],
   imports: [
     BrowserModule,
@@ -31,7 +34,9 @@ import { StatsComponent } from './stats/stats.component';
     MatButtonModule,
     MatToolbarModule,
     MatTabsModule,
-    MatCardModule
+    MatCardModule,
+    FormsModule, 
+    ReactiveFormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
