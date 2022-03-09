@@ -34,7 +34,7 @@ export class AppComponent implements OnInit {
   getMove1(col: number) {
     this.httpClient.get<any>('http://localhost:8000/move1/' + col).subscribe(
       response => {
-        this.board = response.split("Is_done").pop();
+        this.board = response.split("Is_done").pop(); //is done kan behövas för att avgöra vinnare
         return response; //gör split här också
 
 
