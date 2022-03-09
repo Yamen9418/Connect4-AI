@@ -9,3 +9,4 @@ export class CellComponent {
   @Input()
   value: number | undefined;
 }
+
