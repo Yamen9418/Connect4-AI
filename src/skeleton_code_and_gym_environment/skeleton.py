@@ -41,15 +41,7 @@ CBLUE = '\33[44m'
 
 app = FastAPI()
 
-# @app.get("/api-test")
-# def hello(name = None):
-#
-#     if name is None:
-#         text = 'Hello!'
-#     else:
-#         text = 'Hello ' + name + '!'
-#
-#     return text
+# CORS policy
 origins = ["*"]
 app.add_middleware(
   CORSMiddleware,
@@ -99,7 +91,6 @@ async def get_board(info: Request):
   req_info = await info.json()
   print(type(req_info))
   action = alpha_beta_pruning(np.array(req_info.get('board')), 4)
-  # board_state = req_info
 
   return json.dumps(action)
 
@@ -363,7 +354,6 @@ def make_move(board, move, turn):
     if board[:, move][j] == 0:
       board[:, move][j] = turn
       break
-  # board_state = board
   return board
 
 

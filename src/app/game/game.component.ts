@@ -149,10 +149,8 @@ export class GameComponent implements OnInit {
     return board2d;
   }
 
-  // send_board_to_api(board: number[][]) { //TODO David
-  //   return board
-  // }
-
+  // fetching : sending game board to the API
+  // data : the best move according to the AI algorithm
    postBoard(board2d: number [][]) {
     this.httpClient.post<any>('http://localhost:8000/board/', {board: board2d}).subscribe({
         next: data => {
