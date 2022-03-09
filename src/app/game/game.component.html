@@ -1,0 +1,11 @@
+<h2 *ngIf="winner">Player {{ winner == 1 ? 1 : 2 }} won the game!</h2>
+<h2 *ngIf="winner == 0">Draw!</h2>
+<button mat-raised-button color="accent" *ngIf="winner || winner == 0" (click)="ngOnInit()">Restart game</button>
+
+<main>
+    <app-cell
+        *ngFor="let cell of board; let i = index"
+        [value]="cell"
+        (click)="makeMove(i)">
+    </app-cell>
+</main>

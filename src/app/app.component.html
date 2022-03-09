@@ -1,1 +1,17 @@
-<h1>test {{board}}</h1>
+<p>
+  <mat-toolbar>
+    <span>{{title}}</span>
+  </mat-toolbar>
+</p>
+
+<nav mat-tab-nav-bar>
+  <a mat-tab-link
+  routerLink="/">Instructions</a>
+
+  <a mat-tab-link
+  routerLink="/game">Play Game</a>
+
+  <a mat-tab-link
+  routerLink="/stats">Statistics</a>
+</nav>
+<router-outlet></router-outlet>
