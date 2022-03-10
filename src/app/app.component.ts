@@ -60,5 +60,5 @@ export class AppComponent implements OnInit {
   // }
 
 
-  title = 'EDAF90-Project';
+  title = 'Connect-4';
 }
