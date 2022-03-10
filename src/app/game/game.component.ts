@@ -14,8 +14,8 @@ export class GameComponent implements OnInit {
   height = 6;
   width = 7;
 
-  diff: string | undefined;
-  mode: string | undefined;
+  diff!: string;
+  mode!: string;
   board!: number[];
   playerIsNext!: boolean;
   winner!: number | null;
@@ -42,10 +42,12 @@ export class GameComponent implements OnInit {
     return this.playerIsNext ? 1 : -1;
   }
 
-  botMove(gameBoard: number[][]) {
-    //this.postBoard(gameBoard);
-    let x = 2;
-    console.log(x);
+  async botMove(gameBoard: number[][]) {
+    if (this.winner == null) {
+    
+    let res = await this.postBoard(gameBoard);
+
+    let x = parseInt(res, 10);
 
     if (!this.board[x]) {
       for (let y = this.height - 1; y >= 0; y--) {
@@ -65,6 +67,7 @@ export class GameComponent implements OnInit {
         console.log(this.winner);
         this.addEntry("player", this.winner);
       }
+    }
   }
 
 
@@ -184,19 +187,9 @@ export class GameComponent implements OnInit {
   // fetching : sending game board to the API
   // data : the best move according to the AI algorithm
   // depth : by default it is 4
-  async postBoard(board2d: number [][]) {
-    this.httpClient.post<any>('http://localhost:8000/board/',
-      {board: board2d, depth : this.diff})
-      .subscribe({
-        next: async data => {
-          this.botmove = await data
-          return
-
-        },
-        error: error => {
-            console.error('There was an error! check game.component.ts line 171', error);
-        }
-    })
+  postBoard(board2d: number [][]) {
+    const response = this.httpClient.post<any>('http://localhost:8000/board/', {board: board2d, depth : parseInt(this.diff,10)}).toPromise()
+    return response;
   }
 
   transpose(board: number[][]) {
@@ -209,7 +202,7 @@ export class GameComponent implements OnInit {
     return transposed;
   }
 
-  getRangeSum(arr: number[], from: number, to: number) {
+  getRangeSum(arr: number[], from: number, to: number) { 
     return arr.slice(from, to).reduce((p, c) => {
       return p + c;
     }, 0);

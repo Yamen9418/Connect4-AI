@@ -1,16 +1,25 @@
-<mat-card>
-    <mat-card-title *ngIf="winner">Player {{ winner == 1 ? 1 : 2 }} won the game!</mat-card-title>
-    <mat-card-title *ngIf="winner == 0">Draw!</mat-card-title>
-    <button mat-raised-button color="accent" *ngIf="winner || winner == 0" (click)="ngOnInit()">Restart game</button>
-
-    <main>
-        <app-cell
-            *ngFor="let cell of board; let i = index"
-            [value]="cell"
-            (click)="makeMove(i)">
-        </app-cell>
-    </main>
-    
-    <h2 *ngIf="mode == 'Local'">Mode: {{ mode }} </h2>
-    <h2 *ngIf="mode == 'AI'">Mode: {{ mode }}, Difficulty: {{ diff }} </h2>
-</mat-card>
+<main class="center">
+    <app-cell *ngFor="let cell of board; let i = index" [value]="cell" (click)="makeMove(i)">
+    </app-cell>
+</main>
+<br>
+<div class="center">
+    <mat-card *ngIf="winner || winner == 0" style="width: 350px">
+        <mat-card-title *ngIf="winner">
+            Player {{ winner == 1 ? 1 : 2 }} won the game!
+        </mat-card-title>
+        <mat-card-title *ngIf="winner == 0">
+            Draw!
+        </mat-card-title>
+        <mat-card-content>
+            <br *ngIf="winner || winner == 0">
+            <button mat-raised-button color="accent" *ngIf="winner || winner == 0" (click)="ngOnInit()">
+                Restart game
+            </button>
+        </mat-card-content>
+    </mat-card>
+</div>
+<br>
+<h2 *ngIf="mode == 'Local'">Mode: {{ mode }} </h2>
+<h2 *ngIf="mode == 'AI'">Mode: {{ mode }}, Difficulty: {{ diff }} </h2>
+<h2 *ngIf="(mode == 'AI' && !playerIsNext) && !winner">AI generating move ...</h2>
