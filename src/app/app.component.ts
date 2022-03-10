@@ -60,5 +60,6 @@ export class AppComponent implements OnInit {
   // }
 
 
-  title = 'EDAF90-Project';
+  title = 'EDAF90-Project-Connect4 Alpha-Beta Pruning Algorithm- ' +
+    'Done by: Yamen Albdeiwi, Kristian Ahrendtsen Blom, Oscar Cederberg and David Ravanelli';
 }
