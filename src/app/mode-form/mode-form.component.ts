@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import {MatFormFieldModule} from '@angular/material/form-field'; 
+import { diffValidator } from './customvalidator.validator';
 
 @Component({
   selector: 'app-mode-form',
@@ -18,6 +20,8 @@ export class ModeFormComponent {
   modeForm = this.fb.group({
     mode: ['', [Validators.required]],
     diff: [''],
+  }, {
+    validator: diffValidator("mode", "diff")
   });
 
   changeDiff(e: any) {
@@ -42,6 +46,7 @@ export class ModeFormComponent {
 
   onSubmit(): void {
     console.log(this.modeForm.value);
-    this.router.navigate(['/game']);
+    this.router.navigate(['/game',{queryParameter : {mode: this.mode, diff: this.diff}}]);
+
   }
 }

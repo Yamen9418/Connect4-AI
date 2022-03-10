@@ -1,6 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { StatEntry } from '../stats/stats.component';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-game',
@@ -11,6 +12,8 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 export class GameComponent implements OnInit {
   height = 6;
   width = 7;
+  diff = '';
+  mode = '';
 
   board!: number[];
   playerIsNext!: boolean;
