@@ -40,6 +40,7 @@ CBLUE = '\33[44m'
 
 
 app = FastAPI()
+DEBUG = False # change to true to check get some prints
 
 # CORS policy
 origins = ["*"]
@@ -89,8 +90,18 @@ def bot_move(depth: int):
 @app.post('/board/')
 async def get_board(info: Request):
   req_info = await info.json()
-  print(type(req_info))
-  action = alpha_beta_pruning(np.array(req_info.get('board')), 4)
+  # to check both post and fetch
+  if DEBUG:
+    print(req_info.get('board'))
+    print(req_info.get('depth'))
+
+  # check if the depth is given otherwise take the default value = 4
+  if req_info.get('depth') is None:
+    if DEBUG:
+      print('depth is None! changed to the default value = 4 ')
+    action = alpha_beta_pruning(np.array(req_info.get('board')), 4)
+  else:
+    action = alpha_beta_pruning(np.array(req_info.get('board')), req_info.get('depth'))
 
   return json.dumps(action)
 

@@ -13,7 +13,7 @@ import { DataService } from '../data.service';
 export class GameComponent implements OnInit {
   height = 6;
   width = 7;
-  
+
   diff: string | undefined;
   mode: string | undefined;
   board!: number[];
@@ -159,19 +159,21 @@ export class GameComponent implements OnInit {
 
   // fetching : sending game board to the API
   // data : the best move according to the AI algorithm
+  // depth : by default it is 4
    postBoard(board2d: number [][]) {
-    this.httpClient.post<any>('http://localhost:8000/board/', {board: board2d}).subscribe({
+    this.httpClient.post<any>('http://localhost:8000/board/',
+      {board: board2d, /* depth : the value given from the user in the front-end*/})
+      .subscribe({
         next: data => {
             this.botmove = data
             console.log(this.botmove)
             return data
         },
         error: error => {
-            console.error('There was an error!', error);
+            console.error('There was an error! check game.component.ts line 171', error);
         }
     })
   }
-
 
   transpose(board: number[][]) {
     let transposed = Array(board[0].length).fill(null).map(()=>Array(board.length).fill(0))
