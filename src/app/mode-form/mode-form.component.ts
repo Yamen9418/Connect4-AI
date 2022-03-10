@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import {MatFormFieldModule} from '@angular/material/form-field'; 
 import { diffValidator } from './customvalidator.validator';
+import { DataService } from '../data.service';
 
 @Component({
   selector: 'app-mode-form',
@@ -13,7 +13,7 @@ export class ModeFormComponent {
   modes = ['AI', 'Local'];
   difficulties = [1,2,3,4,5,6,7,8];
 
-  constructor(private router: Router, public fb: FormBuilder) {
+  constructor(private router: Router, public fb: FormBuilder, public data: DataService) {
     this.router = router;
   }
 
@@ -46,7 +46,9 @@ export class ModeFormComponent {
 
   onSubmit(): void {
     console.log(this.modeForm.value);
-    this.router.navigate(['/game',{queryParameter : {mode: this.mode, diff: this.diff}}]);
+    this.data.diff = this.modeForm.value['diff'];
+    this.data.mode = this.modeForm.value['mode'];
+    this.router.navigate(['/game']);
 
   }
 }

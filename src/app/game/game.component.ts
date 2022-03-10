@@ -2,6 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { StatEntry } from '../stats/stats.component';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
+import { DataService } from '../data.service';
 
 @Component({
   selector: 'app-game',
@@ -12,19 +13,23 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class GameComponent implements OnInit {
   height = 6;
   width = 7;
-  diff = '';
-  mode = '';
-
+  
+  diff: string | undefined;
+  mode: string | undefined;
   board!: number[];
   playerIsNext!: boolean;
   winner!: number | null;
   botmove!: number | undefined;
 
   constructor(
-    private httpClient: HttpClient
+    private httpClient: HttpClient,
+    public data: DataService
   ) {}
 
   ngOnInit(): void {
+    this.mode = this.data.mode;
+    this.diff = this.data.diff;
+    console.log(this.mode, this.diff);
     this.newGame();
   }
 
