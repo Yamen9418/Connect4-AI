@@ -1,8 +1,8 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { StatEntry } from '../stats/stats.component';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { ActivatedRoute, Router } from '@angular/router';
 import { DataService } from '../data.service';
+import { NumberSymbol } from '@angular/common';
 
 @Component({
   selector: 'app-game',
@@ -19,7 +19,7 @@ export class GameComponent implements OnInit {
   board!: number[];
   playerIsNext!: boolean;
   winner!: number | null;
-  botmove!: number | undefined;
+  botmove!: number;
 
   constructor(
     private httpClient: HttpClient,
@@ -29,7 +29,6 @@ export class GameComponent implements OnInit {
   ngOnInit(): void {
     this.mode = this.data.mode;
     this.diff = this.data.diff;
-    console.log(this.mode, this.diff);
     this.newGame();
   }
 
@@ -43,19 +42,43 @@ export class GameComponent implements OnInit {
     return this.playerIsNext ? 1 : -1;
   }
 
-  makeMove(i:number) {
-    if (this.winner == null) {
-      const x = i % this.width;
+  botMove(gameBoard: number[][]) {
+    //this.postBoard(gameBoard);
+    let x = 2;
+    console.log(x);
 
+    if (!this.board[x]) {
+      for (let y = this.height - 1; y >= 0; y--) {
+        const index = x + y * this.width;
+        if (!this.board[index]) {
+          this.board[index] = this.player;
+          break;
+        }
+      }
+
+      this.playerIsNext = !this.playerIsNext;
+    }
+      let board2d = this.build2dtable(this.board);
+      this.winner = this.calculateWinner(board2d);
+
+      if (this.winner != null) {
+        console.log(this.winner);
+        this.addEntry("player", this.winner);
+      }
+  }
+
+
+
+
+  makeMove(i:number) {
+    if (this.winner == null && !(this.mode == 'AI' && !this.playerIsNext)) {
+      let x = i % this.width;
+      
       if (!this.board[x]) {
-        for (let y = 0; y < this.height; y++) {
+        for (let y = this.height - 1; y >= 0; y--) {
           const index = x + y * this.width;
-          const cell = this.board[index];
-          if (cell) {
-            this.board.splice(index - this.width, 1, this.player);
-            break;
-          } else if (y == this.height - 1) {
-            this.board.splice(index, 1, this.player);
+          if (!this.board[index]) {
+            this.board[index] = this.player;
             break;
           }
         }
@@ -64,12 +87,13 @@ export class GameComponent implements OnInit {
       }
       let board2d = this.build2dtable(this.board);
       this.winner = this.calculateWinner(board2d);
-      // this.send_board_to_api(board2d)
-      this.postBoard(board2d)
 
       if (this.winner != null) {
         console.log(this.winner);
         this.addEntry("player", this.winner);
+      }
+      if (this.mode == 'AI') {
+        this.botMove(board2d);
       }
     }
   }
@@ -160,14 +184,14 @@ export class GameComponent implements OnInit {
   // fetching : sending game board to the API
   // data : the best move according to the AI algorithm
   // depth : by default it is 4
-   postBoard(board2d: number [][]) {
+  async postBoard(board2d: number [][]) {
     this.httpClient.post<any>('http://localhost:8000/board/',
-      {board: board2d, /* depth : the value given from the user in the front-end*/})
+      {board: board2d, depth : this.diff})
       .subscribe({
-        next: data => {
-            this.botmove = data
-            console.log(this.botmove)
-            return data
+        next: async data => {
+          this.botmove = await data
+          return
+
         },
         error: error => {
             console.error('There was an error! check game.component.ts line 171', error);
