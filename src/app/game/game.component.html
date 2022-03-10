@@ -11,3 +11,4 @@
 </main>
 <h2 *ngIf="mode == 'Local'">Mode: {{ mode }} </h2>
 <h2 *ngIf="mode == 'AI'">Mode: {{ mode }}, Difficulty: {{ diff }} </h2>
+<h2 *ngIf="mode == 'AI' && !playerIsNext">AI generating move ...</h2>

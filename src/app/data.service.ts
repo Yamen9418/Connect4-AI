@@ -5,8 +5,8 @@ import { Inject, Injectable } from '@angular/core';
 })
 
 export class DataService {
-  mode: string | undefined;
-  diff: string | undefined;
+  mode!: string;
+  diff!: string;
 
   constructor() { }
 }
