@@ -1,14 +1,19 @@
 <div *ngIf="entries.length > 0">
+    <div class="md-padding" layout="row" layout-wrap>
+        <mat-card style="width: 350px" *ngFor="let entry of entries; let i = index">
+            <mat-card-title>{{i + 1}}) Game against {{ entry.against }}</mat-card-title>
+            <mat-card-content>Result: {{ entry.winner }}</mat-card-content>
+        </mat-card>
+    </div>
+    <br> 
     <button mat-raised-button color="warn"
     (click)="resetEntries()">Remove entries</button>
-    <mat-card *ngFor="let entry of entries; let i = index">
-        <mat-card-title>{{i + 1}}) Game against {{ entry.against }}</mat-card-title>
-        <mat-card-subtitle>Result: {{ entry.winner }}</mat-card-subtitle>
-    </mat-card>
 </div>
 <div *ngIf="entries.length == 0">
-    <mat-card>
-        <mat-card-title>No played games found</mat-card-title>
-        <mat-card-subtitle>Go play some games!</mat-card-subtitle>
-    </mat-card>
+    <div class="md-padding" layout="row" layout-wrap>
+        <mat-card style="width: 350px">
+            <mat-card-title>No played games found</mat-card-title>
+            <mat-card-content>Go play some games!</mat-card-content>
+        </mat-card>
+    </div>
 </div>

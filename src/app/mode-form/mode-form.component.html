@@ -6,24 +6,25 @@
             style="padding: 10px"
             class="custom-select mb-3"
             (change)="changeMode($event)"
-            formControlName="mode"
-          >
+            formControlName="mode">
             <option value="">Choose Mode</option>
             <option *ngFor="let mode of modes">
               {{ mode }}
             </option>
           </select>
+          
+          <br *ngIf="modeForm.value['mode'] == 'AI'">
           <select *ngIf="modeForm.value['mode'] == 'AI'"
             style="padding: 10px"
             class="custom-select mb-3"
             (change)="changeDiff($event)"
-            formControlName="diff"
-          >
+            formControlName="diff">
             <option value="">Choose Difficulty</option>
             <option *ngFor="let diff of difficulties">
               {{ diff }}
             </option>
           </select>
+          <br>
           <button type="submit" [disabled]="!modeForm.valid" class="btn btn-danger btn-lg btn-block">
             Play!
           </button>
